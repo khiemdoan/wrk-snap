@@ -1,0 +1,24 @@
+name: wrk
+adopt-info: wrk
+summary: a HTTP benchmarking tool
+description: wrk is a modern HTTP benchmarking tool capable of generating significant load when run on a single multi-core CPU. It combines a multithreaded design with scalable event notification systems such as epoll and kqueue.
+
+base: core18
+grade: stable
+confinement: strict
+
+parts:
+  wrk:
+    plugin: make
+    source: https://github.com/wg/wrk.git
+    build-packages:
+      - unzip
+    override-build: |
+      snapcraftctl set-version $(git describe --tags --always --dirty)
+      make
+      cp wrk $SNAPCRAFT_PART_INSTALL/wrk
+
+apps:
+  wrk:
+    command: wrk
+    plugs: [network]
